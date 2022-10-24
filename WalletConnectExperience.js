@@ -2,6 +2,12 @@ import * as React from "react";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useWalletConnect } from "@walletconnect/react-native-dapp";
 const ethers = require("ethers");
+import { apiGetGasPrices } from "./helpers/gasEstimators";
+import {
+  sanitizeHex,
+  convertStringToHex,
+  convertAmountToRawNumber,
+} from "./helpers/utilities";
 
 const shortenAddress = (address) => {
   return `${address.slice(0, 6)}...${address.slice(
@@ -43,10 +49,29 @@ export default function WalletConnectExperience() {
         [receiver, amount]
       ),
     ]);
+
+    // gasPrice
+    const gasPrices = await apiGetGasPrices();
+    const _gasPrice = gasPrices.fast.price;
+    const gasPrice = sanitizeHex(
+      convertStringToHex(convertAmountToRawNumber(_gasPrice, 9))
+    );
+
+    // gasLimit
+    const _gasLimit = 21000;
+    const gasLimit = sanitizeHex(convertStringToHex(_gasLimit));
+
+    // value
+    const _value = 0;
+    const value = sanitizeHex(convertStringToHex(_value));
+
     const param = {
       from: address,
       to: contactAddress,
       data: encodedData,
+      gasPrice,
+      gasLimit,
+      value,
     };
     const transactionHash = await connector.sendTransaction(param);
     console.log("transaction Hash: " + transactionHash);
