@@ -31,9 +31,10 @@ export default function WalletConnectExperience() {
 
   const transferTokens = async () => {
     console.log("initiating a transfer");
-    const methodID = "0xa9059cbb";
-    const receiver = "0xD04e8B57ef70202118F318524b2C54AF854D5101";
-    const amount = ethers.utils.parseUnits("1", "ether");
+    const methodID = "0xa9059cbb"; //erc20 transfer functions method id (remains same across all the erc20 contracts)
+    const receiver = "0xD04e8B57ef70202118F318524b2C54AF854D5101"; //replace receiever address
+    const amount = ethers.utils.parseUnits("0.1", 18); //update amount of tokens to be transfered
+    const contactAddress = "0x63B4554aABA9a40D102d2Ec24Cdf8c27F5C6d4D7"; //update contract address (current contract deloyed on sepolia)
     const address = connector.accounts[0];
     let encodedData = ethers.utils.hexConcat([
       methodID,
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
-    marginBottom:10
+    marginBottom: 10,
   },
   text: {
     color: "#FFFFFF",
